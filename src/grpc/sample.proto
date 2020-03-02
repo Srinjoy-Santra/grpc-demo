@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package movieDetails;
+
+message Category {
+    string code = 1;
+    //string name = 2;
+    //string tnc_url = 3;
+    //string img_url = 4;
+    //string description = 5;
+    //string redirection_url = 6;
+    //string is_sponsored = 7;
+    repeated float ratings = 2;
+    bool is_eligible_quikpay = 3;
+    //map<string, SubCategory> sub_categories = 10;
+}
+
+message MovieRequest {
+    string ping = 1;
+    Category sample = 2;
+}
+
+message MovieResponse {
+    string title = 1;
+    string desc = 2;
+    repeated int32 numbers = 3;
+    repeated Category sample = 4;
+}
+
+service MovieDetailService {
+    rpc getDetails(MovieRequest) returns (MovieResponse);
+}

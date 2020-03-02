@@ -1,0 +1,240 @@
+syntax = "proto3";
+package proto;
+//import "google/protobuf/timestamp.proto";
+//import "google/api/annotations.proto";
+service ProductService{
+  // rpc GetByCategory(ProductRequest) returns (Products) {
+  //   option (google.api.http) = {
+  //     get: "/products/{categoryId}"
+  //   };
+  // }
+  // rpc GetDetails (ProductRequest) returns (Product) {}
+  rpc Get(ProductRequest) returns (Products) {
+    // option (google.api.http) = {
+    //   post: "/products/get"
+    //   body: "*"
+    // };
+  }
+  rpc GetOne(ProductRequest) returns (Product) {
+    // option (google.api.http) = {
+    //   post: "/products/getone"
+    //   body: "*"
+    // };
+  }
+  rpc UpdateQuantity(ProductUpdateRequest) returns (UpdateProductQuantityRes) {
+    // option (google.api.http) = {
+    //   put: "/products/quantity"
+    // };
+  } 
+  // rpc GetQuantity(ProductQuantityRequest) returns (ProductQuantityResponse) {
+  //   option (google.api.http) = {
+  //     post: "/products/quantity",
+  //     body: "*"
+  //   };
+  // }
+rpc Insert (Product) returns (Product) {
+    // option (google.api.http) = {
+    //   post: "/products/insert"
+    //   body: "*"
+    // };
+  }
+  rpc Update (ProductUpdateRequest) returns (Product) {
+    // option (google.api.http) = {
+    //   post: "/products/update"
+    //   body: "*"
+    // };
+  }
+  rpc ClearCache (ProductRequest) returns (Product) {
+    // option (google.api.http) = {
+    //   post: "/products/clearcache"
+    //   body: "*"
+    // };
+  } 
+}
+message Products{
+  repeated Product products = 1;
+}
+message ProductRequest {
+  string id = 1;
+  string categoryId = 2;
+  repeated string categoryIds = 3;
+  Sort sort = 4;
+  Filter filter = 5;
+  int32 limit  = 6;
+  int32 offset  = 7;
+  repeated Range range = 8;
+  repeated Attribute selection = 9;
+  repeated string cmsIds = 10;
+  string deviceType = 11;
+  repeated string ids = 12;
+  repeated string eventCodes = 13;
+  string eventCode = 14;
+  bool suggested = 15;
+  bool excludeDevice = 16;
+  bool skipActive = 17;
+  message Attribute {
+    string key = 1;
+   repeated string value = 2;
+  }
+  message Filter{
+    string categories = 1;
+    int64 minPrice = 2;
+    int64 maxPrice = 3;
+  }
+  message Range {
+    string key = 1;
+    repeated RangeFields value = 2;
+    message RangeFields {
+      int64 min = 1;
+      int64 max = 2;
+    }
+  }
+}
+message ProductUpdateRequest {
+  ProductRequest query = 1;
+  Product product= 2;
+}
+message Product {
+  string id = 1;
+  string type = 2;
+  string sku = 3;
+  string title = 4;
+  string description = 5;
+  string shortDescription = 6;
+  string parentId = 7;
+  repeated string categories = 8;
+  string currency = 9;
+  int64 price = 10;
+  int64 sellPrice = 12;
+  repeated Media images = 13;
+  repeated Media videos = 14;
+  bool active = 15;
+  repeated Attribute attributes = 16;
+  Dimensions dimensions = 17;
+  SEO seo = 20;
+  CMSDetails cmsDetails = 24;
+  repeated Product variants = 27;
+  int32 quantity = 28;
+  float weight = 29;
+  Units units = 30;
+  repeated string tags = 31;
+  //TODO: Remove collection from here
+  string collection = 32;
+  int32 maxAllowed = 33;
+  //MRP cost is coming from CMS bridge
+  int64 MRP = 34;
+  string hsnCode = 35;
+  Story story = 36;
+  int64 strikeOutPrice = 37;
+  string badge = 38;
+  Vendor vendor = 39;
+  string deliveryTime = 40;
+  Donation donation = 41;
+  string flag = 42;
+  string returnNexchange = 43;
+  SizeChart sizeChart = 44;
+  Media thumbnail = 45;
+  //google.protobuf.Timestamp expiry = 46;
+  string sellerId = 46;
+  string footer = 47;
+  string redirection = 48;
+  bool cod = 49;
+  repeated string eventCodes = 50;
+  string qcUrl = 51;
+  ConvertedPrice convertedPrice = 52;
+  int32 thresholdQuantity = 53;
+  bool enabled = 54;
+ string categoryId = 55;
+  message Attribute {
+    string name = 1;
+    string value = 2;
+  }
+  message SEO {
+    string title = 1;
+    string description = 2;
+    string keywords = 3;
+    bool robots = 4;
+  }
+  message Units {
+    string dimensions = 1;
+    string weight = 2;
+  }
+  message Story {
+    string subtitle = 1;
+    string title = 2;
+    int32 mediaDelay = 3;
+    string backgroundImage = 4;
+    repeated Media media = 5;
+  }
+  message Media {
+    string type = 1;
+    string url = 2;
+    string alt = 3;
+    string name = 4;
+  }
+  message Vendor {
+    string id = 1;
+    string name = 2;
+    string gstin = 3;
+  }
+  message Donation {
+    string name = 1;
+    string description = 2;
+    string amount = 3;
+  }
+  message ConvertedPrice {
+    float mrp = 1;
+    float price = 2;
+    float strikeOutPrice = 3;
+  }
+}
+message Dimensions {
+  int32 width = 1;
+  int32 height = 2;
+  int32 length = 3;
+}
+message CMSDetails{
+  string type = 1;
+  string id = 2;
+}
+message ManufactureDetails{
+  string modelNumber = 1;
+  //google.protobuf.Timestamp releaseDate = 2;
+}
+message Sort{
+  int32 relevance = 1;
+  int32 popularity = 2;
+  int32 price = 3;
+}
+message SizeChart{
+  string id = 1;
+  string name = 2;
+  string image = 3;
+  string note = 4;
+  repeated string headers = 5;
+  // Will contain json string
+  // Since its grpc does not support array of map<string, string>
+  // and change the simple data struct would be a dirty option
+  repeated SizeData data = 6;
+  message SizeData{
+    string key = 1;
+    string value = 2;
+  }
+}
+message UpdateProductQuantityReq{
+  repeated Product product = 1;
+}
+message UpdateProductQuantityRes{
+  bool status = 1;
+  string message = 2;
+}
+message ProductQuantity {
+  string productId = 1;
+	int32 available = 2;
+}
+message ProductQuantityResponse {
+	repeated ProductQuantity productQuantity = 1;
+}
+message ProductQuantityRequest {
+	repeated string productId = 1;
+}
